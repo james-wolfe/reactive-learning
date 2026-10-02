@@ -1,0 +1,41 @@
+# Generated outputs (the data are archived separately; see README.md)
+/figures/
+/data/generated/
+
+# Python environments and caches
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.cache/
+
+# Notebook and coverage state
+**/.ipynb_checkpoints/
+.coverage
+htmlcov/
+
+# Editors and operating systems
+.DS_Store
+.idea/
+.vscode/
+*~
+*.swp
+
+# Build artifacts
+build/
+dist/
+
+# LaTeX build products (source files and final PDFs remain trackable)
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
