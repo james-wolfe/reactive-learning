@@ -1,9 +1,11 @@
-# Data
+# Data for "Multi-Agent Learning of Reactive IPD Strategies"
 
-Every data file is produced by a script in `scripts/generate/`; there is no external or
-hand-edited input. Generated files live in `generated/`, which git does not track (about
-200 MB in total; archived at [doi:10.5281/zenodo.23044556](https://doi.org/10.5281/zenodo.23044556)). `timings.csv` records the run time of each
-generator (see the main README).
+Every data file is produced by a script in `scripts/generate/` from the repository
+[github.com/james-wolfe/reactive-learning](https://github.com/james-wolfe/reactive-learning); there is no external or
+hand-edited input. The data files are in `generated/` (about 200 MB total).
+They are not stored in the git repository;
+download them from [doi:10.5281/zenodo.23044556](https://doi.org/10.5281/zenodo.23044556).
+`timings.csv` records the run time of each generator (see the main README of the repo).
 
 All runs use $b = 1$, $c = 1/2$ and $\varepsilon = 10^{-3}$ unless the table says otherwise.
 Archives are NumPy `.npz` files of plain numeric and string arrays; none needs `allow_pickle`.
@@ -27,5 +29,11 @@ Most also store their parameters (`b`, `c`, `epsilon`, `seed`, ...) as scalar en
 | `axis_entry_rate_sensitivity/*.npz` | `axis_entry_rate_sensitivity_data.py` | checks (Sec. III B) | the main runs restarted from their first entry into q = ε with the learning rates swapped; one archive per case, described in the generator |
 
 `agent_main_data.py` must run before `axis_entry_data.py`,
-`agent_variable_long_run_data.py` and `axis_entry_rate_sensitivity_data.py`; the Makefile
-enforces this order. The long run needs a C compiler.
+`agent_variable_long_run_data.py` and `axis_entry_rate_sensitivity_data.py`;
+the Makefile enforces this order. The long run needs a C compiler.
+
+## License and citation
+
+The data are released under CC BY 4.0. If you use them, please cite J. Wolfe and
+J. B. Plotkin, *Multi-Agent Learning of Reactive IPD Strategies* (in preparation), and
+this dataset ([doi:10.5281/zenodo.23044556](https://doi.org/10.5281/zenodo.23044556)).
