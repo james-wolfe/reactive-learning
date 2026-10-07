@@ -1,11 +1,12 @@
 # Data, figures and numerical checks for "Multi-Agent Learning of Reactive IPD Strategies".
 # `make help` lists the targets.
 #
-# A data file is generated only when it is missing, or older than the data it is computed
-# from. Editing a generator does not trigger a rerun, because several take hours: delete the
-# output and run `make data` (`make -B` would also rerun every upstream generator). Every
-# generator runs through scripts/timed.py, which appends its wall-clock time to
-# data/timings.csv.
+# A data file is generated only when it is missing. Data-on-data prerequisites are order-only
+# (after `|`), so file times never trigger a rerun: data unpacked from Zenodo is used as is,
+# whatever times the unzip left, and editing a generator does not rerun it (several take
+# hours). To rerun an experiment, delete its output and everything computed from it (see
+# below), then run `make data`. Every generator runs through scripts/timed.py, which appends
+# its wall-clock time to data/timings.csv.
 
 UV ?= uv
 PYTHON := $(UV) run --locked python
@@ -63,11 +64,11 @@ data: $(sort $(FIGURE_DATA) $(CHECK_DATA))
 
 $(word 1,$(MAIN)):
 	$(TIMED) scripts/generate/agent_main_data.py
-$(word 2,$(MAIN)): $(word 1,$(MAIN))
+$(word 2,$(MAIN)): | $(word 1,$(MAIN))
 
 $(word 1,$(LATTICE)):
 	$(TIMED) scripts/generate/lattice_data.py
-$(word 2,$(LATTICE)): $(word 1,$(LATTICE))
+$(word 2,$(LATTICE)): | $(word 1,$(LATTICE))
 
 $(D)/agent_noise.npz:
 	$(TIMED) scripts/generate/agent_noise_data.py
@@ -82,20 +83,21 @@ $(D)/gtft_q_shock.npz:
 $(D)/gtft_disk_displacement.npz:
 	$(TIMED) scripts/generate/gtft_disk_displacement_data.py
 
-# Computed from the main runs.
-$(D)/axis_entry.npz: $(MAIN)
+# Computed from the main runs: delete these too when rerunning those.
+$(D)/axis_entry.npz: | $(MAIN)
 	$(TIMED) scripts/generate/axis_entry_data.py
-$(word 1,$(RATE_SWAP)): $(MAIN)
+$(word 1,$(RATE_SWAP)): | $(MAIN)
 	$(TIMED) scripts/generate/axis_entry_rate_sensitivity_data.py
-$(wordlist 2,4,$(RATE_SWAP)): $(word 1,$(RATE_SWAP))
+$(wordlist 2,4,$(RATE_SWAP)): | $(word 1,$(RATE_SWAP))
 
 $(word 1,$(SELF_PLAY)):
 	$(TIMED) scripts/generate/self_interactions_data.py
-$(word 2,$(SELF_PLAY)): $(word 1,$(SELF_PLAY))
+$(word 2,$(SELF_PLAY)): | $(word 1,$(SELF_PLAY))
 
-# Compiled C kernel (see README). The long run refuses to overwrite an existing archive;
-# resume an interrupted run with `make figS6 LONG_RUN_ARGS=--resume`.
-$(LONG_RUN): $(word 1,$(MAIN))
+# Also computed from the main runs. Compiled C kernel (see README). The long run refuses to
+# overwrite an existing archive; resume an interrupted run with
+# `make figS6 LONG_RUN_ARGS=--resume`.
+$(LONG_RUN): | $(word 1,$(MAIN))
 	$(TIMED) scripts/generate/agent_variable_long_run_data.py $(LONG_RUN_ARGS)
 
 # ---------------------------------------------------------------------------------------

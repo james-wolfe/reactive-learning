@@ -20,8 +20,9 @@ Download simulation data from
 `data/`. Alternatively, generate it yourself by running `make data`
 (total run time: ~9 hours, see [Run times](#run-times) for breakdown).
 
-The generators depend on each other's output, so we recommend running them through `make data`, 
-which handles the order.
+The generators depend on each other's output, so we recommend running them through `make data`,
+which handles the order. `make` only generates missing files and ignores file times, so unpacked
+data is never regenerated.
 
 ### Reproducing results
 
@@ -35,7 +36,9 @@ make data      # generate any missing data
 ```
 
 `make help` lists every target. To rerun one experiment, delete its output in
-`data/generated/` and run `make data`.
+`data/generated/` and run `make data`. Editing a generator does not trigger a rerun. If you rerun
+the main runs (`agent_variable.npz`, `agent_uniform.npz`), also delete the files computed from them:
+`axis_entry.npz`, `axis_entry_rate_sensitivity/` and `agent_variable_long_run_n125_rate100.npz`.
 
 Alternatively, use the notebooks in `notebooks/` to generate the figures and checks
 interactively (data must be present in `data/generated/`).
